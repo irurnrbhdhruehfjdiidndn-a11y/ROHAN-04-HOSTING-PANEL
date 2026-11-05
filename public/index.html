@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROHAN 04 HOSTING PANEL</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #090909;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+header {
+    padding: 22px;
+    background: #171717;
+    border: 1px solid #333;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #ff3030;
+    font-size: 23px;
+}
+
+header p {
+    color: #aaa;
+    margin-top: 10px;
+}
+
+.card {
+    background: #171717;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.card h2 {
+    font-size: 17px;
+    margin-bottom: 15px;
+}
+
+.status {
+    color: #ff4545;
+    font-weight: bold;
+}
+
+.online {
+    color: #20df78;
+}
+
+button {
+    background: #c51e2a;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+footer {
+    color: #777;
+    text-align: center;
+    padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>👑 ROHAN 04 HOSTING PANEL</h1>
+    <p>Premium Project Management Dashboard</p>
+</header>
+
+<div class="card">
+    <h2>Server Status</h2>
+    <p id="status" class="status">Checking...</p>
+</div>
+
+<div class="card">
+    <h2>Server Uptime</h2>
+    <p id="uptime">Loading...</p>
+</div>
+
+<div class="card">
+    <h2>Memory Usage</h2>
+    <p id="memory">Loading...</p>
+</div>
+
+<div class="card">
+    <h2>System Information</h2>
+    <p>Platform: Node.js</p>
+    <p>Panel: ROHAN 04</p>
+    <p>Version: 1.0.0</p>
+</div>
+
+<button onclick="loadStatus()">Refresh Status</button>
+
+<footer>
+    ROHAN 04 HOSTING PANEL © 2026
+</footer>
+
+<script>
+async function loadStatus() {
+    try {
+        const response = await fetch('/api/status');
+        if (!response.ok) throw new Error('Server error');
+
+        const data = await response.json();
+
+        document.getElementById('status').textContent =
+            '● ' + data.status;
+        document.getElementById('status').className = 'online';
+
+        document.getElementById('uptime').textContent =
+            Math.floor(data.uptime) + ' Seconds';
+
+        const used = data.memory.heapUsed / 1024 / 1024;
+        const total = data.memory.heapTotal / 1024 / 1024;
+
+        document.getElementById('memory').textContent =
+            used.toFixed(2) + ' MB / ' + total.toFixed(2) + ' MB';
+
+    } catch (error) {
+        document.getElementById('status').textContent =
+            '● Offline';
+        document.getElementById('status').className = 'status';
+    }
+}
+
+loadStatus();
+setInterval(loadStatus, 15000);
+</script>
+
+</body>
+</html>
